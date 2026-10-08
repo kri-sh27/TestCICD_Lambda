@@ -1,0 +1,36 @@
+name: Deploy Lambda Function
+
+on:
+  push:
+    paths:
+      - 'src/**'
+    branches:
+      - main
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Zip tool
+        uses: montudor/action-zip@v1.0.0
+      - name: Create Zip file for lambda function
+        run: cd src && zip -r code.zip .
+      - name: AWS CLI v2
+        uses: imehedi/actions-awscli-v2@latest
+        with:
+          args: "lambda update-function-code \
+          
+            --function-name arn:aws:lambda:ap-south-1:929897439921:function:TestCICDFunctions \
+            --zip-file fileb://src/code.zip \
+            --region ${{ secrets.AWS_REGION }}  "
+
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        
