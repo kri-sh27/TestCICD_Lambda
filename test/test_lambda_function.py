@@ -1,6 +1,6 @@
 # from extra_utils import get_lambda_message
 
-from lambda_function import lambda_handler
+from src.lambda_function import lambda_handler
 
 
 def test_lambda_function():
